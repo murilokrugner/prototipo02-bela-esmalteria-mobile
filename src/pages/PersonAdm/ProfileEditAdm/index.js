@@ -82,6 +82,10 @@ export default function ProfileEditAdm({ navigation }) {
             name: `${prefix}.${ext}`,
           };
 
+          const data = new FormData();
+
+          data.append('file', imageData);
+
           setPreview(previewData);
 
           Alert.alert(
@@ -99,7 +103,7 @@ export default function ProfileEditAdm({ navigation }) {
               {
                 text: 'Sim',
                 onPress: () => {
-                  handleUploadImage(imageData);
+                  handleUploadImage(data);
                 },
               },
             ],
@@ -109,12 +113,10 @@ export default function ProfileEditAdm({ navigation }) {
     );
   }
 
-  async function handleUploadImage(imageData) {
+  async function handleUploadImage(data) {
     setLoadingAvatar(true);
 
-    const data = new FormData();
-
-    data.append('file', imageData);
+    console.tron.log(data);
 
     const response = await api.post('files', data);
 
