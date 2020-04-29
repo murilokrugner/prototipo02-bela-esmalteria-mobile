@@ -83,7 +83,27 @@ export default function ProfileEditAdm({ navigation }) {
           };
 
           setPreview(previewData);
-          handleUploadImage(imageData);
+
+          Alert.alert(
+            'Atualizar imagem de perfil',
+            'Deseja alterar a imagem de perfil com a imagem selecionada?',
+            [
+              {
+                text: 'Não',
+                onPress: () => {
+                  setPreview('');
+                  return;
+                },
+                style: 'cancel',
+              },
+              {
+                text: 'Sim',
+                onPress: () => {
+                  handleUploadImage(imageData);
+                },
+              },
+            ],
+          );
         }
       },
     );
@@ -91,6 +111,7 @@ export default function ProfileEditAdm({ navigation }) {
 
   async function handleUploadImage(imageData) {
     setLoadingAvatar(true);
+
     const data = new FormData();
 
     data.append('file', imageData);
@@ -100,10 +121,10 @@ export default function ProfileEditAdm({ navigation }) {
     const { id, url } = response.data;
 
     setImage(id);
-    setPreview(url);
     handleImage(id);
     setLoadingAvatar(false);
   }
+
 
   function handleImage(id) {
     dispatch(
@@ -154,14 +175,21 @@ export default function ProfileEditAdm({ navigation }) {
                   style={styles.loadAvatar}
                 />
               ) : (
-                  <Avatar
-                    source={{
-                      uri: imageProfile.avatar
-                        ? imageProfile.avatar.url
-                        : `https://api.adorable.io/avatars/50/${profile.name}.png`,
-                    }}
-                  />
+                  <>
+                    {preview ? (
+                      <Avatar source={preview} />
+                    ) : (
+                        <Avatar
+                          source={{
+                            uri: imageProfile.avatar
+                              ? imageProfile.avatar.url
+                              : `https://api.adorable.io/avatars/50/${profile.name}.png`,
+                          }}
+                        />
+                      )}
+                  </>
                 )}
+
               <FormInput
                 icon="person-outline"
                 autoCorrect={false}
